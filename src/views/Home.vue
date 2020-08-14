@@ -60,7 +60,8 @@
                           <v-icon left>exit_to_app</v-icon>Close
                         </v-btn>
                         <v-btn color="light-green darken-4" dark type="submit" outlined small>
-                          <v-icon left>save</v-icon>Save
+                          <v-icon left>save</v-icon>
+                          {{saveDialog}}
                         </v-btn>
                       </v-card-actions>
                     </v-form>
@@ -110,7 +111,7 @@
             </v-card>
             <v-snackbar v-model="snackbar" top right :color="color">
               {{text}}
-              <v-btn color="black" text @click="snackbar = false">Fermer</v-btn>
+              <v-btn color="black" text @click="snackbar = false">Dismiss</v-btn>
             </v-snackbar>
           </v-col>
         </v-row>
@@ -133,7 +134,7 @@ export default {
     dialog: false,
     fab: false,
     search: "",
-    nackbar: false,
+    snackbar: false,
     text: "",
     color: "",
     posts: [],
@@ -157,12 +158,17 @@ export default {
       val || this.close();
     },
   },
+  computed: {
+    saveDialog() {
+      return this.editedIndex === -1 ? "Save" : "Edit";
+    },
+  },
   mounted() {
     this.loadPosts();
   },
   methods: {
     loadPosts: async function () {
-      let apiURL = "localhost:4000/api";
+      let apiURL = "http://localhost:4000/api/";
       axios
         .get(apiURL)
         .then((res) => {
@@ -189,34 +195,88 @@ export default {
     },
     savePost: async function () {
       if (this.editedIndex > -1) {
-        console.log("updated");
+        this.updatePost();
       } else {
         this.createPost();
       }
     },
     createPost() {
-      // let apiURL = "localhost:4000/api/create-post";
-      // axios
-      //   .post(apiURL, this.postData)
-      //   .then(() => {
-      //     this.postData = {
-      //       name: "",
-      //       description: "",
-      //     };
-      //     this.close();
-      // this.loadPost()
-      //     this.color = "success";
-      //     this.text = "Post has been successfully saved";
-      //     this.snackbar = true;
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
-      this.close();
-      this.loadPosts();
-      this.color = "success";
-      this.text = "Post has been successfully saved";
-      this.snackbar = true;
+      let apiURL = "http://localhost:4000/api/create-post";
+      axios
+        .post(apiURL, this.postData)
+        .then(() => {
+          this.postData = {
+            name: "",
+            description: "",
+          };
+          this.close();
+          this.loadPosts();
+          this.color = "success";
+          this.text = "Post has been successfully saved";
+          this.snackbar = true;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    editPost(item) {
+      this.editedIndex = this.posts.indexOf(item);
+      this.postData = Object.assign({}, item);
+      this.dialog = true;
+    },
+    updatePost() {
+      let apiURL = `http://localhost:4000/api/update-post/${this.postData._id}`;
+      axios
+        .post(apiURL, this.postData)
+        .then((res) => {
+          console.log(res);
+          this.close();
+          this.loadPosts();
+          this.color = "info";
+          this.text = "Post has been modified.";
+          this.snackbar = true;
+        })
+        .catch((error) => {
+          console.log(error);
+          console.log(this.$route.params.id);
+        });
+    },
+    deletePost(id) {
+      this.$swal({
+        title: "Are you sure?",
+        text: "You will not be able to go back",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#00B894",
+        cancelButtonColor: "#D63031",
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
+      })
+        .then((result) => {
+          if (result.value) {
+            try {
+              let apiURL = `http://loclhost:4000/api/delete-post/`;
+              let indexOfArrayItem = this.posts.findIndex((i) => i._id === id);
+              axios
+                .post(apiURL, { data: { id } })
+                .then(() => {
+                  this.posts.splice(indexOfArrayItem, 1);
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+              this.$swal("Deleted!", "Post has been deleted", "success");
+              this.color = "error";
+              this.text = "Post has been deleted!";
+              this.snackbar = true;
+            } catch (error) {
+              this.$swal("Failed", "There was sonething wrong", "warning");
+            }
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 };
