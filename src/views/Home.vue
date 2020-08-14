@@ -57,7 +57,7 @@
                       <v-card-actions>
                         <v-spacer />
                         <v-btn color="#2C3A47" dark @click="close" outlined small>
-                          <v-icon left>exit-to-app</v-icon>Close
+                          <v-icon left>exit_to_app</v-icon>Close
                         </v-btn>
                         <v-btn color="light-green darken-4" dark type="submit" outlined small>
                           <v-icon left>save</v-icon>Save
@@ -93,7 +93,7 @@
                         <v-icon small>mdi-pencil</v-icon>
                       </v-btn>
                       <v-btn color="pink" fab x-small @click="deletePost(item._id)" outlined>
-                        <v-icon small>mdi-delted</v-icon>
+                        <v-icon small>mdi-delete</v-icon>
                       </v-btn>
                     </template>
                     <template v-slot:no-results>
@@ -108,6 +108,10 @@
                 </v-card>
               </v-container>
             </v-card>
+            <v-snackbar v-model="snackbar" top right :color="color">
+              {{text}}
+              <v-btn color="black" text @click="snackbar = false">Fermer</v-btn>
+            </v-snackbar>
           </v-col>
         </v-row>
       </v-container>
@@ -119,6 +123,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   props: {
     source: String,
@@ -127,7 +132,11 @@ export default {
     mini: false,
     dialog: false,
     fab: false,
-    psots: [],
+    search: "",
+    nackbar: false,
+    text: "",
+    color: "",
+    posts: [],
     headers: [
       { text: "Name", value: "name", sortable: true },
       { text: "Description", value: "description", sortable: true },
@@ -143,7 +152,26 @@ export default {
     },
     editedIndex: -1,
   }),
+  watch: {
+    dialog(val) {
+      val || this.close();
+    },
+  },
+  mounted() {
+    this.loadPosts();
+  },
   methods: {
+    loadPosts: async function () {
+      let apiURL = "localhost:4000/api";
+      axios
+        .get(apiURL)
+        .then((res) => {
+          this.posts = res.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     onScroll(e) {
       if (typeof window === "undefined") return;
       const top = window.pageYOffset || e.target.scrollTop || 0;
@@ -158,6 +186,37 @@ export default {
         this.postData = Object.assign({}, this.default);
         this.editedIndex = -1;
       }, 300);
+    },
+    savePost: async function () {
+      if (this.editedIndex > -1) {
+        console.log("updated");
+      } else {
+        this.createPost();
+      }
+    },
+    createPost() {
+      // let apiURL = "localhost:4000/api/create-post";
+      // axios
+      //   .post(apiURL, this.postData)
+      //   .then(() => {
+      //     this.postData = {
+      //       name: "",
+      //       description: "",
+      //     };
+      //     this.close();
+      // this.loadPost()
+      //     this.color = "success";
+      //     this.text = "Post has been successfully saved";
+      //     this.snackbar = true;
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
+      this.close();
+      this.loadPosts();
+      this.color = "success";
+      this.text = "Post has been successfully saved";
+      this.snackbar = true;
     },
   },
 };
