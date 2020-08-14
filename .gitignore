@@ -21,3 +21,7 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Inside backedn file ignore
+./backend/node_modules
+./backend/package-lock.json
