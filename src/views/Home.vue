@@ -255,10 +255,10 @@ export default {
         .then((result) => {
           if (result.value) {
             try {
-              let apiURL = `http://loclhost:4000/api/delete-post/`;
+              let apiURL = `http://localhost:4000/api/delete-post/${id}`;
               let indexOfArrayItem = this.posts.findIndex((i) => i._id === id);
               axios
-                .post(apiURL, { data: { id } })
+                .delete(apiURL)
                 .then(() => {
                   this.posts.splice(indexOfArrayItem, 1);
                 })
