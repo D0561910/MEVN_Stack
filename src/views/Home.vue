@@ -125,6 +125,10 @@
 
 <script>
 import axios from "axios";
+
+// API Address
+const API = "https://express-server-1128.herokuapp.com";
+
 export default {
   props: {
     source: String,
@@ -168,7 +172,7 @@ export default {
   },
   methods: {
     loadPosts: async function () {
-      let apiURL = "http://localhost:4000/api/";
+      let apiURL = `${API}/api/`;
       axios
         .get(apiURL)
         .then((res) => {
@@ -201,7 +205,7 @@ export default {
       }
     },
     createPost() {
-      let apiURL = "http://localhost:4000/api/create-post";
+      let apiURL = `${API}/api/create-post`;
       axios
         .post(apiURL, this.postData)
         .then(() => {
@@ -225,7 +229,7 @@ export default {
       this.dialog = true;
     },
     updatePost() {
-      let apiURL = `http://localhost:4000/api/update-post/${this.postData._id}`;
+      let apiURL = `${API}/api/update-post/${this.postData._id}`;
       axios
         .post(apiURL, this.postData)
         .then((res) => {
@@ -255,7 +259,7 @@ export default {
         .then((result) => {
           if (result.value) {
             try {
-              let apiURL = `http://localhost:4000/api/delete-post/${id}`;
+              let apiURL = `${API}/api/delete-post/${id}`;
               let indexOfArrayItem = this.posts.findIndex((i) => i._id === id);
               axios
                 .delete(apiURL)
