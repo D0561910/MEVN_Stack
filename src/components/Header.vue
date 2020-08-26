@@ -17,7 +17,8 @@
 <script>
 export default {
   data: () => ({
-    auth: false,
+    mini: false,
+    auth: true,
   }),
 };
 </script>
