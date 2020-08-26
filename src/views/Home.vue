@@ -1,15 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-app-bar app color="green" dark>
-      <v-app-bar-nav-icon @click.stop="mini = !mini" />
-      <v-toolbar-title style="width:300px" class="ml-0 pl-4">
-        <span class="hidden-sm-and-down">MEVN Stack</span>
-      </v-toolbar-title>
-      <v-spacer />
-      <v-btn icon>
-        <v-icon>mdi-logout</v-icon>
-      </v-btn>
-    </v-app-bar>
+    <Header />
     <v-main>
       <v-container class="scroll-y" fluid>
         <v-row align="center" justify="center">
@@ -125,6 +116,7 @@
 
 <script>
 import axios from "axios";
+import Header from "../components/Header";
 
 // API Address
 const API = "https://express-server-1128.herokuapp.com";
@@ -132,6 +124,9 @@ const API = "https://express-server-1128.herokuapp.com";
 export default {
   props: {
     source: String,
+  },
+  components: {
+    Header
   },
   data: () => ({
     mini: false,
