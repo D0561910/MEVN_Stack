@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-content>
+    <v-main>
       <v-container class="fill-height" fluid>
         <v-row align="center" justify="center">
           <v-col cols="12" sm="8" md="8">
@@ -12,10 +12,10 @@
                       class="text-center display-2 purple--text text-lighten-1"
                     >Sign In to Todo List</h1>
                     <div class="text-center">
-                      <v-btn class="mx-2" fab color="black" outlined>
+                      <v-btn class="btn-social mx-2" fab color="blue" outlined>
                         <v-icon>fab fa-facebook</v-icon>
                       </v-btn>
-                      <v-btn class="mx-2" fab color="black" outlined>
+                      <v-btn class="btn-social mx-2" fab color="red" outlined>
                         <v-icon>fab fa-google</v-icon>
                       </v-btn>
                     </div>
@@ -26,7 +26,8 @@
                         name="Email"
                         prepend-icon="email"
                         type="email"
-                        color="teal accent-3"
+                        color="purple lighten-3"
+                        v-model="username"
                       />
                       <v-text-field
                         id="password"
@@ -34,7 +35,8 @@
                         name="Password"
                         prepend-icon="lock"
                         type="password"
-                        color="teal accent-3"
+                        color="purple lighten-3"
+                        v-model="password"
                       />
                     </v-form>
                     <h6 class="text-center mt-3">Forget Password?</h6>
@@ -58,12 +60,13 @@
           </v-col>
         </v-row>
       </v-container>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
+import "../styles/button.css";
 
 export default {
   props: {
@@ -84,12 +87,12 @@ export default {
   methods: {
     ...mapActions("account", ["login", "logout"]),
     handleSubmit(e) {
-      console.log(`${e} Hello World`);
-      // this.submitted = true;
-      // const { username, password } = this;
-      // if (username && password) {
-      //   // this.login({ username, password });
-      // }
+      this.submitted = true;
+      e.preventDefault;
+      const { username, password } = this;
+      if (username && password) {
+        this.login({ username, password });
+      }
     },
   },
 };

@@ -19,10 +19,10 @@
                 <v-card-text class="mt-12">
                   <h1 class="text-center display-2 purple--text text--lighten-1">Create Account</h1>
                   <div class="text-center mt-4">
-                    <v-btn class="mx-2" fab color="black" outlined>
+                    <v-btn class="mx-2" fab color="blue" outlined>
                       <v-icon>fab fa-facebook</v-icon>
                     </v-btn>
-                    <v-btn class="mx-2" fab color="black" outlined>
+                    <v-btn class="mx-2" fab color="red" outlined>
                       <v-icon>fab fa-google</v-icon>
                     </v-btn>
                   </div>
@@ -66,6 +66,7 @@
 
 <script>
 // import { mapState, mapActions } from "vuex";
+import "../styles/button.css";
 
 export default {
   data() {

@@ -2,7 +2,7 @@
 import { authHeader } from "../_helpers";
 
 const config = {
-  apiUrl: "http://localhost:4000",
+  apiUrl: "https://express-server-1128.herokuapp.com",
 };
 
 function login(username, password) {
@@ -12,9 +12,10 @@ function login(username, password) {
     body: JSON.stringify({ username, password }),
   };
 
-  return fetch(`${config.apiUrl}/users/authenticate`, requestOptions)
+  return fetch(`${config.apiUrl}/api/login`, requestOptions)
     .then(handleResponse)
     .then((user) => {
+      console.log({ user });
       // login successful if there's a jwt token in the response
       if (user.token) {
         // store user details and jwt token in local storage to keep user logged in between page refreshes
@@ -88,6 +89,7 @@ function _delete(id) {
 
 const handleResponse = (response) => {
   return response.text().then((text) => {
+    console.log("new");
     const data = text && JSON.parse(text);
     if (!response.ok) {
       if (response.status === 401) {

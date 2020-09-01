@@ -1,0 +1,4 @@
+.btn-social:focus {
+  box-shadow: none;
+  outline: 0;
+}
